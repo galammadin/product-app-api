@@ -9,8 +9,6 @@ from rest_framework import (
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-from asgiref.sync import sync_to_async
-from django.db.models import QuerySet
 
 from core.models import (
     Product,
@@ -30,10 +28,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'tags']
     search_fields = ['title', 'description']
 
-    async def get_queryset(self):
+    def get_queryset(self):
         """Retrieve products for authenticated user."""
-        queryset = await sync_to_async(list)(self.queryset.filter(user=self.request.user).order_by('-id'))
-        return queryset
+        return self.queryset.filter(user=self.request.user).order_by('-id')
 
     def get_serializer_class(self):
         """Return the serializer class for request."""
@@ -42,9 +39,9 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return self.serializer_class
 
-    async def perform_create(self, serializer):
+    def perform_create(self, serializer):
         """Create a new product."""
-        await sync_to_async(serializer.save)(user=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class BaseProductAttrViewSet(mixins.DestroyModelMixin,
@@ -55,10 +52,9 @@ class BaseProductAttrViewSet(mixins.DestroyModelMixin,
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    async def get_queryset(self):
+    def get_queryset(self):
         """Filter queryset to authenticated user."""
-        queryset = await sync_to_async(list)(self.queryset.filter(user=self.request.user).order_by('-name'))
-        return queryset
+        return self.queryset.filter(user=self.request.user).order_by('-name')
 
 
 class TagViewSet(BaseProductAttrViewSet):

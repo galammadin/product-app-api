@@ -4,7 +4,6 @@ Views for the user API.
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from asgiref.sync import sync_to_async
 
 from user.serializers import (
     UserSerializer,
@@ -29,6 +28,6 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    async def get_object(self):
-        """Retrieve and return authenticated user."""
-        return await sync_to_async(lambda: self.request.user)()
+    def get_object(self):
+        """Retrieve and return the authenticated user."""
+        return self.request.user
