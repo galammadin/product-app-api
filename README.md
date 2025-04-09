@@ -134,3 +134,26 @@ product-app-api/
 ## License
 
 This project is licensed under the MIT License.
+
+## Optimization Techniques
+
+### Asynchronous Views
+
+The API can be optimized using Django 5's async support:
+
+```python
+from asgiref.sync import sync_to_async
+
+class ProductViewSet(viewsets.ModelViewSet):
+    async def get_queryset(self):
+        return await sync_to_async(lambda: self.queryset.filter(user=self.request.user))()
+```
+
+### Related Queries
+
+Optimize database queries with `select_related` and `prefetch_related`:
+
+```python
+def get_queryset(self):
+    return self.queryset.select_related('category').prefetch_related('tags')
+```
