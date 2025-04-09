@@ -1,8 +1,17 @@
 """
 Tests for models.
 """
+from decimal import Decimal
+
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
+from core import models
+
+
+def create_user(email='user@example.com', password='testpass123'):
+    """Create a return a new user."""
+    return get_user_model().objects.create_user(email, password)
 
 
 class ModelTests(TestCase):
@@ -46,3 +55,35 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_product(self):
+        """Test creating a product is successful."""
+        user = get_user_model().objects.create_user(
+            'test@example.com',
+            'testpass123',
+        )
+        product = models.Product.objects.create(
+            user=user,
+            title='Sample product name',
+            price=Decimal('5.50'),
+            description='Sample receipe description.',
+        )
+
+        self.assertEqual(str(product), product.title)
+
+    def test_create_tag(self):
+        """Test creating a tag is successful."""
+        user = create_user()
+        tag = models.Tag.objects.create(user=user, name='Tag1')
+
+        self.assertEqual(str(tag), tag.name)
+
+    def test_create_category(self):
+        """Test creating a category is successful."""
+        user = create_user()
+        category = models.Category.objects.create(
+            user=user,
+            name='Category1'
+        )
+
+        self.assertEqual(str(category), category.name)
