@@ -38,6 +38,8 @@ The API will be available at http://localhost:8000
 1. Go to the API documentation:
 - Swagger UI: http://localhost:8000/api/docs/
 - Create User with /api/user/create
+- Create Token with /api/user/token
+- Authorize with created token in Swagger for further use
 
 2. Go to the Fronend(Django Template):
 - Frontend : http://localhost:8000/api/product/frontend/
@@ -137,3 +139,8 @@ Optimize database queries with `select_related` and `prefetch_related`:
 def get_queryset(self):
     return self.queryset.select_related('category').prefetch_related('tags')
 ```
+
+### Fix the Frontend
+
+Frontend does not have all the features, and it has bugs that should be fixed.
+Frontend was built very fast pace with AI, so it has problems.
