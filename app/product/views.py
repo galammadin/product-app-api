@@ -7,8 +7,10 @@ from rest_framework import (
     filters,
 )
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.models import (
     Product,
@@ -67,3 +69,19 @@ class CategoryViewSet(BaseProductAttrViewSet):
     """Manage categories in the database."""
     serializer_class = serializers.CategorySerializer
     queryset = Category.objects.all()
+
+
+class LoginView(TemplateView):
+    """View for the login page."""
+    template_name = 'product/login.html'
+    permission_classes = [AllowAny]
+
+
+class ProductFrontendView(TemplateView):
+    """View for the product management frontend."""
+    template_name = 'product/index.html'
+
+
+class TestView(TemplateView):
+    """View for the test page."""
+    template_name = 'product/test.html'

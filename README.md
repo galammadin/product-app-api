@@ -9,12 +9,13 @@ A RESTful API for managing products, categories, and tags built with Django and 
 - Filtering products by category and tags
 - Search functionality for products
 - API documentation with Swagger/OpenAPI
+- Docker containerization for easy deployment
+- Django admin interface for data management
 
 ## Prerequisites
 
 - Python 3.9 or higher
 - Docker and Docker Compose
-- PostgreSQL (if running locally)
 
 ## Setup
 
@@ -24,21 +25,45 @@ git clone <repository-url>
 cd product-app-api
 ```
 
-2. Create a `.env` file in the root directory with the following variables:
-```env
-DB_HOST=db
-DB_NAME=app_db
-DB_USER=app_user
-DB_PASS=app_password
-```
-
-3. Build and start the Docker containers:
+2. Build and start the Docker containers:
 ```bash
 docker-compose build
 docker-compose up
 ```
 
 The API will be available at http://localhost:8000
+
+## Testing functionality of Backend
+
+1. Go to the API documentation:
+- Swagger UI: http://localhost:8000/api/docs/
+- Create User with /api/user/create
+
+2. Go to the Fronend(Django Template):
+- Frontend : http://localhost:8000/api/product/frontend/
+- Frontend does not have all the backend features and endpoints. (All the endpoints can be seen in Swagger UI)
+
+## Creating a Django Admin User with Docker
+
+To create a Django admin user for accessing the admin interface, follow these steps:
+
+1. Create a superuser by running the following command:
+```bash
+docker-compose run --rm app sh -c "python manage.py createsuperuser"
+```
+
+2. Follow the prompts to enter:
+   - Email address
+   - Password (and confirm it)
+
+3. Access the Django admin interface at:
+```
+http://localhost:8000/admin/
+```
+
+4. Log in with the superuser credentials you created.
+    - Create at least 5 categories, 10 tags, and 20 products.
+
 
 ## API Endpoints
 
@@ -57,56 +82,22 @@ The API will be available at http://localhost:8000
 
 ### Categories
 - `GET /api/product/categories/` - List all categories
-- `POST /api/product/categories/` - Create a new category
-- `GET /api/product/categories/{id}/` - Get category details
 - `PUT /api/product/categories/{id}/` - Update category
 - `PATCH /api/product/categories/{id}/` - Partial update
 - `DELETE /api/product/categories/{id}/` - Delete category
 
 ### Tags
 - `GET /api/product/tags/` - List all tags
-- `POST /api/product/tags/` - Create a new tag
-- `GET /api/product/tags/{id}/` - Get tag details
 - `PUT /api/product/tags/{id}/` - Update tag
 - `PATCH /api/product/tags/{id}/` - Partial update
 - `DELETE /api/product/tags/{id}/` - Delete tag
 
-## API Documentation
-
-The API documentation is available at:
-- Swagger UI: http://localhost:8000/api/docs/
-- OpenAPI Schema: http://localhost:8000/api/schema/
 
 ## Testing
 
 Run the tests using:
 ```bash
-docker-compose run app python manage.py test
-```
-
-## Development
-
-To run the project locally without Docker:
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Set up the database:
-```bash
-python manage.py migrate
-```
-
-4. Run the development server:
-```bash
-python manage.py runserver
+docker-compose run --rm app sh -c "python manage.py test"
 ```
 
 ## Project Structure
@@ -124,18 +115,7 @@ product-app-api/
 └── Dockerfile            # Docker configuration
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Optimization Techniques
+## Optimization Techniques(Future Considerations)
 
 ### Asynchronous Views
 
