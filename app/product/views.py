@@ -24,10 +24,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'tags']
     search_fields = ['title', 'description']
-    ordering_fields = ['title', 'price']
 
     def get_queryset(self):
         """Retrieve products for authenticated user."""
@@ -46,9 +45,9 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class BaseProductAttrViewSet(mixins.DestroyModelMixin,
-                            mixins.UpdateModelMixin,
-                            mixins.ListModelMixin,
-                            viewsets.GenericViewSet):
+                             mixins.UpdateModelMixin,
+                             mixins.ListModelMixin,
+                             viewsets.GenericViewSet):
     """Base viewset for product attributes."""
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -56,6 +55,7 @@ class BaseProductAttrViewSet(mixins.DestroyModelMixin,
     def get_queryset(self):
         """Filter queryset to authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by('-name')
+
 
 class TagViewSet(BaseProductAttrViewSet):
     """Manage tags in the database."""

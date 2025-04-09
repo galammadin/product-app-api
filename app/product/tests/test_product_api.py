@@ -319,8 +319,16 @@ class PrivateProductApiTests(TestCase):
 
     def test_search_products(self):
         """Test searching products."""
-        create_product(user=self.user, title='Laptop', description='High-end laptop')
-        create_product(user=self.user, title='T-shirt', description='Cotton t-shirt')
+        create_product(
+            user=self.user,
+            title='Laptop',
+            description='High-end laptop'
+        )
+        create_product(
+            user=self.user,
+            title='T-shirt',
+            description='Cotton t-shirt'
+        )
 
         res = self.client.get(PRODUCTS_URL, {'search': 'laptop'})
 
